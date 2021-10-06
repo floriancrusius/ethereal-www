@@ -108,14 +108,8 @@ router.get('/message/:id/source', (req, res, next) => {
 
 router.get('/messages/:mailbox/:message/source', checkLogin, (req, res, next) => {
     const schema = Joi.object().keys({
-        mailbox: Joi.string()
-            .hex()
-            .lowercase()
-            .length(24)
-            .required(),
-        message: Joi.number()
-            .min(1)
-            .required()
+        mailbox: Joi.string().hex().lowercase().length(24).required(),
+        message: Joi.number().min(1).required()
     });
 
     const result = Joi.validate(req.params, schema, {
@@ -169,14 +163,8 @@ router.get('/messages/:mailbox/:message/source', checkLogin, (req, res, next) =>
 
 router.get('/messages/:mailbox/:message/message.eml', checkLogin, (req, res, next) => {
     const schema = Joi.object().keys({
-        mailbox: Joi.string()
-            .hex()
-            .lowercase()
-            .length(24)
-            .required(),
-        message: Joi.number()
-            .min(1)
-            .required()
+        mailbox: Joi.string().hex().lowercase().length(24).required(),
+        message: Joi.number().min(1).required()
     });
 
     const result = Joi.validate(req.params, schema, {
@@ -338,14 +326,8 @@ router.get('/message/:id', (req, res, next) => {
 
 router.get('/messages/:mailbox/:message', checkLogin, (req, res, next) => {
     const schema = Joi.object().keys({
-        mailbox: Joi.string()
-            .hex()
-            .lowercase()
-            .length(24)
-            .required(),
-        message: Joi.number()
-            .min(1)
-            .required()
+        mailbox: Joi.string().hex().lowercase().length(24).required(),
+        message: Joi.number().min(1).required()
     });
 
     const result = Joi.validate(req.params, schema, {
@@ -412,14 +394,8 @@ router.get('/attachment/:id/:aid', (req, res, next) => {
 
 router.get('/messages/:mailbox/:message/attachment/:aid', checkLogin, (req, res, next) => {
     const schema = Joi.object().keys({
-        mailbox: Joi.string()
-            .hex()
-            .lowercase()
-            .length(24)
-            .required(),
-        message: Joi.number()
-            .min(1)
-            .required()
+        mailbox: Joi.string().hex().lowercase().length(24).required(),
+        message: Joi.number().min(1).required()
     });
 
     const result = Joi.validate(req.params, schema, {
@@ -472,26 +448,11 @@ router.get('/messages/:mailbox/:message/attachment/:aid', checkLogin, (req, res,
 
 router.get('/messages', checkLogin, (req, res, next) => {
     const schema = Joi.object().keys({
-        limit: Joi.number()
-            .empty('')
-            .default(20)
-            .min(1)
-            .max(250),
-        order: Joi.any()
-            .empty('')
-            .allow(['asc', 'desc'])
-            .default('desc'),
-        next: Joi.string()
-            .empty('')
-            .alphanum()
-            .max(100),
-        previous: Joi.string()
-            .empty('')
-            .alphanum()
-            .max(100),
-        page: Joi.number()
-            .empty('')
-            .default(1)
+        limit: Joi.number().empty('').default(20).min(1).max(250),
+        order: Joi.any().empty('').allow(['asc', 'desc']).default('desc'),
+        next: Joi.string().empty('').alphanum().max(100),
+        previous: Joi.string().empty('').alphanum().max(100),
+        page: Joi.number().empty('').default(1)
     });
 
     const result = Joi.validate(req.query, schema, {
@@ -711,11 +672,7 @@ router.post('/create', (req, res, next) => {
     let tryCreate = done => {
         let firstName = faker.name.firstName();
         let lastName = faker.name.lastName();
-        let username = faker.internet
-            .userName(firstName, lastName)
-            .toLowerCase()
-            .replace(/_+/g, '.')
-            .trim();
+        let username = faker.internet.userName(firstName, lastName).toLowerCase().replace(/_+/g, '.').trim();
 
         if (tryCount >= 5) {
             username = getId();
@@ -745,7 +702,7 @@ router.post('/create', (req, res, next) => {
                 return done(null, userData);
             })
             .catch(err => {
-                if (tryCount < 10) {
+                if (tryCount > 10) {
                     err.status = 500;
                     return next(err);
                 } else {
